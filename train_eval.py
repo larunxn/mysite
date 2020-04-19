@@ -1,4 +1,3 @@
-# coding: UTF-8
 import numpy as np
 import torch
 import torch.nn as nn
@@ -28,7 +27,7 @@ def init_network(model, method='xavier', exclude='embedding', seed=123):
 
 def train(config, model, train_iter, dev_iter, test_iter):
     start_time = time.time()
-    model.train()
+    model.train()  # 训练过程中会在程序上方添加一句model.train()，作用是启用batch normalization和drop out。
     optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
 
     # 学习率指数衰减，每次epoch：学习率 = gamma * 学习率
@@ -83,7 +82,7 @@ def train(config, model, train_iter, dev_iter, test_iter):
 def test(config, model, test_iter):
     # test
     model.load_state_dict(torch.load(config.save_path))
-    model.eval()
+    model.eval()  # 测试过程中会使用model.eval()，这时神经网络会沿用batch normalization的值，并不使用drop out。
     start_time = time.time()
     test_acc, test_loss, test_report, test_confusion = evaluate(config, model, test_iter, test=True)
     msg = 'Test Loss: {0:>5.2},  Test Acc: {1:>6.2%}'

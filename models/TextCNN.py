@@ -37,11 +37,10 @@ class Config(object):
         self.num_filters = 256                                          # 卷积核数量(channels数)
 
 
-'''Convolutional Neural Networks for Sentence Classification'''
-
-
 class Model(nn.Module):
     def __init__(self, config):
+        """
+        """
         super(Model, self).__init__()
         if config.embedding_pretrained is not None:
             self.embedding = nn.Embedding.from_pretrained(config.embedding_pretrained, freeze=False)
@@ -53,6 +52,11 @@ class Model(nn.Module):
         self.fc = nn.Linear(config.num_filters * len(config.filter_sizes), config.num_classes)
 
     def conv_and_pool(self, x, conv):
+        """
+        卷积和池化操作
+        x:
+        conv:
+        """
         x = F.relu(conv(x)).squeeze(3)
         x = F.max_pool1d(x, x.size(2)).squeeze(2)
         return x
